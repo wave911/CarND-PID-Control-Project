@@ -44,15 +44,11 @@ double PID::TotalError(std::vector<double> par) {
 }
 
 void PID::Twiddle(const double cte) {
-
-
 	//UpdateError(cte);
 	double best_error = this->TotalError(p);
 	//std::cout << " inital best_error = " << best_error << std::endl;
 	int i = 0;
  	while ((dp[0] + dp[1] + dp[2]) > TOLERANCE) {
- 		//std::cout << "1p[0]= " << p[0] << " p[1]=" << p[1] << " p[2]=" << p[2] << endl;
-		//for(int i = 0; i < p.size(); i++)
  		if (i > 2)
  			i = 0;
 		{
@@ -60,37 +56,26 @@ void PID::Twiddle(const double cte) {
 
 			//UpdateError(cte);
 			double error = this->TotalError(p);
-			//std::cout << " 1 error = " << error << std::endl;
-			//std::cout << "err1=" << error << endl;
 			if (error < best_error) {
 				best_error = error;
-				//std::cout << " 1 best_error = " << best_error << std::endl;
 				dp[i] *= 1.1;
 			}
 			else {
 				p[i] -= 2 * dp[i];
 				//UpdateError(cte);
 				error = this->TotalError(p);
-				//std::cout << " 2 error = " << error << std::endl;
-				//std::cout << "err2=" << error << endl;
 				if (error < best_error) {
 					best_error = error;
-					//std::cout << " 1 best_error = " << best_error << std::endl;
 					dp[i] *= 1.1;
 				}
 				else {
 					p[i] += dp[i];
 					dp[i] *= 0.9;
-					//std::cout << "dp[0]= " << dp[0] << " dp[1]=" << dp[1] << " dp[2]=" << dp[2] << endl;
 				}
 			}
 		}
 		i++;
-		//std::cout << "2p[0]= " << p[0] << " p[1]=" << p[1] << " p[2]=" << p[2] << endl;
 	}
- 	//std::cout << "here" << endl;
-// 	std::cout << "p[0]= " << p[0] << " p[1]=" << p[1] << " p[2]=" << p[2] << endl;
-// 	std::cout << "dp[0]= " << dp[0] << " dp[1]=" << dp[1] << " dp[2]=" << dp[2] << endl;
 	Kp = p[0];
 	Kd = p[1];
 	Ki = p[2];
